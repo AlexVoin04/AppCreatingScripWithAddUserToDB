@@ -1,6 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more informatio
+using AppCreatingScripWithAddUserToDB.FileManagement;
 using AppCreatingScripWithAddUserToDB.Model;
 using System.Diagnostics.Metrics;
+
 
 //USE[master]
 //GO
@@ -13,39 +15,88 @@ using System.Diagnostics.Metrics;
 //DENY VIEW ANY DATABASE TO [[123]]
 //GO
 
-List<Group> Groups = new List<Group>();
-
-Console.WriteLine("Приложения по созданию скрипта, для добавления пользователей на сервер баз данных MS SQL Server");
-Console.WriteLine();
-while (true)
+internal class Program
 {
-    bool added = true;
-    while (added)
+    private static void Main(string[] args)
     {
-        Console.Write("Введите название группы: ");
-        string titleGroup = Console.ReadLine();
+        List<Group> groups = new List<Group>();
+        List<string> groupsToRemove = new List<string>();
 
-        Console.Write("Введите количество человек в группе: ");
-        int numberPeopleInGroup = int.Parse(Console.ReadLine());
-
-        Groups.Add(new Group(titleGroup, numberPeopleInGroup));
-        
-        Console.Write("Добавить еще одну группу? Y/N?: ");
-        string answear = Console.ReadLine();
-        if (answear == "N" || answear == "n")
+        Console.WriteLine("Приложения по созданию скрипта, для добавления и удаления пользователей на сервере баз данных MS SQL Server");
+        Console.WriteLine();
+        while (true)
         {
-            added = false;
+            Console.WriteLine("Выберите действие:\n1 - Добавить группу\n2 - Удалить группу\n0 - Выход");
+            Console.Write("Действие: ");
+            string choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1":
+                    AddGroup(groups);
+                    break;
+                case "2":
+                    RemoveGroup(groupsToRemove);
+                    break;
+                case "0":
+                    return;
+                default:
+                    Console.WriteLine("Неверный выбор. Попробуйте снова.");
+                    break;
+            }
+
         }
     }
 
-    //foreach (Group group in Groups)
-    //{
-    //    foreach (Account acc in group._Accounts)
-    //    {
-    //        acc.PrintAccount();
-    //    }
-    //}
+    private static void AddGroup(List<Group> groups)
+    {
+        bool added = true;
+        while (added)
+        {
+            Console.Write("Введите название группы для добавления: ");
+            string titleGroup = Console.ReadLine();
 
-    CreateScript.SaveFile(Groups);
+            Console.Write("Введите количество человек в группе: ");
+            int numberPeopleInGroup = int.Parse(Console.ReadLine());
 
+            groups.Add(new Group(titleGroup, numberPeopleInGroup));
+
+            Console.Write("Добавить еще одну группу? Y/N?: ");
+            string answer = Console.ReadLine();
+            if (answer == "N" || answer == "n")
+            {
+                added = false;
+            }
+        }
+
+        CreateScript.CreateLogins(groups);
+
+        //foreach (Group group in Groups)
+        //{
+        //    foreach (Account acc in group._Accounts)
+        //    {
+        //        acc.PrintAccount();
+        //    }
+        //}
+    }
+
+    private static void RemoveGroup(List<string> groups)
+    {
+        bool added = true;
+        while (added)
+        {
+            Console.Write("Введите название группы для удаления: ");
+            string titleGroup = Console.ReadLine();
+
+            groups.Add(titleGroup);
+
+            Console.Write("Удалить еще одну группу? Y/N?: ");
+            string answer = Console.ReadLine();
+            if (answer == "N" || answer == "n")
+            {
+                added = false;
+            }
+        }
+
+        CreateScript.RemoveLogins(groups);
+    }
 }
