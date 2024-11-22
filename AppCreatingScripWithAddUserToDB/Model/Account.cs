@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace AppCreatingScripWithAddUserToDB.Model
 {
@@ -29,6 +25,17 @@ namespace AppCreatingScripWithAddUserToDB.Model
         public void PrintAccount()
         {
             Console.WriteLine(_Login + " "+ _Password);
+        }
+
+        public StringBuilder AccountDefinition() 
+        {
+            StringBuilder accountBody = new();
+            accountBody.Append($"CREATE LOGIN [{GetLogin()}] WITH" +
+                    $" PASSWORD=N'{GetPassword()}', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=ON , CHECK_POLICY=ON\nGO\n");
+            accountBody.Append($"ALTER SERVER ROLE [bulkadmin] ADD MEMBER [{GetLogin()}]\nGO\n");
+            accountBody.Append($"ALTER SERVER ROLE [dbcreator] ADD MEMBER [{GetLogin()}]\nGO\n");
+            accountBody.Append($"USE [master]\nGO\nDENY VIEW ANY DATABASE TO [{GetLogin()}]\nGO\n");
+            return accountBody;
         }
     }
 }

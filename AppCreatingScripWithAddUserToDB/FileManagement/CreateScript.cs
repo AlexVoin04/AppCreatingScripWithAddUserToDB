@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using AppCreatingScripWithAddUserToDB.Model;
+﻿using System.Text;
 
 namespace AppCreatingScripWithAddUserToDB.FileManagement
 {
@@ -49,7 +42,7 @@ namespace AppCreatingScripWithAddUserToDB.FileManagement
                 path = PathAdd;
             else if (fileOperationStatus == FileOperationStatus.Removal)
                 path = PathDel;
-            Console.WriteLine(PathAdd); 
+            Console.WriteLine(path); 
             try 
             {
                 // полная перезапись файла
