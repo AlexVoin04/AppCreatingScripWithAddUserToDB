@@ -31,7 +31,7 @@ namespace AppCreatingScripWithAddUserToDB.Model
             {
                 for (int i = 1; i <= _NumberPeopleInGroup; i++)
                 {
-                    Account account = new(_TitleGroup + "-" + i);
+                    Account account = new(_TitleGroup + "-" + i.ToString("D2"));
                     _Accounts.Add(account);
                 }
             }
